@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gerador de Currículo</title>
+  <style>
+    :root {
+      --bg: #f3f1ec;
+      --ink: #1d2a2a;
+      --ac: #0f6b5c;
+      --card: #fff;
+      --bd: #d8d4ca
+    }
+
+    @media(prefers-color-scheme:dark) {
+      :root {
+        --bg: #141b1b;
+        --ink: #e8efee;
+        --ac: #4fc3ab;
+        --card: #1d2828;
+        --bd: #2f3d3d
+      }
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font: 16px/1.4 system-ui, sans-serif
+    }
+
+    main {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 16px
+    }
+
+    h1 {
+      font-size: 22px;
+      margin: 4px 0 14px
+    }
+
+    section {
+      background: var(--card);
+      border: 1px solid var(--bd);
+      border-radius: 10px;
+      padding: 14px;
+      margin-bottom: 12px
+    }
+
+    h2 {
+      font-size: 15px;
+      margin: 0 0 10px;
+      color: var(--ac)
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      margin: 8px 0 3px;
+      opacity: .8
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 11px;
+      font: inherit;
+      border: 1px solid var(--bd);
+      border-radius: 8px;
+      background: var(--bg);
+      color: var(--ink)
+    }
+
+    textarea {
+      min-height: 90px;
+      resize: vertical
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px
+    }
+
+    .exp {
+      border-top: 1px dashed var(--bd);
+      margin-top: 10px;
+      padding-top: 6px
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px
+    }
+
+    .chips label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin: 0;
+      padding: 7px 10px;
+      border: 1px solid var(--bd);
+      border-radius: 20px;
+      font-size: 14px;
+      opacity: 1
+    }
+
+    .chips input {
+      width: auto;
+      padding: 0
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      font: 600 16px system-ui;
+      border: 0;
+      border-radius: 10px;
+      background: var(--ac);
+      color: #fff;
+      margin-top: 6px
+    }
+
+    button.sec {
+      background: transparent;
+      color: var(--ink);
+      border: 1px solid var(--bd)
+    }
+
+    small {
+      opacity: .7
+    }
+
+    .cores {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px
+    }
+
+    .sw {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      padding: 0;
+      margin: 0;
+      border: 3px solid transparent;
+      background-origin: border-box;
+      box-shadow: 0 0 0 1px var(--bd)
+    }
+
+    .sw.on {
+      border-color: var(--card);
+      box-shadow: 0 0 0 3px var(--ink)
+    }
+
+    #wrap {
+      overflow: hidden;
+      border: 1px solid var(--bd);
+      border-radius: 6px
+    }
+
+    #cv {
+      width: 210mm;
+      min-height: 297mm;
+      background: #fff;
+      color: #1c1c1c;
+      transform-origin: top left;
+      display: grid;
+      grid-template-columns: 62mm 1fr;
+      font: 10.5pt/1.45 Georgia, serif
+    }
+
+    #cv aside {
+      background: #12423a;
+      color: #eef5f3;
+      padding: 16mm 8mm
+    }
+
+    #cv aside h3 {
+      font: 700 9pt system-ui;
+      letter-spacing: .04em;
+      margin: 14px 0 5px;
+      border-bottom: 1px solid #4d7f74;
+      padding-bottom: 3px
+    }
+
+    #cv aside p,
+    #cv aside li {
+      font: 9.5pt/1.4 system-ui;
+      margin: 2px 0;
+      word-break: break-word
+    }
+
+    #cv aside div {
+      font: 9.5pt/1.4 system-ui;
+      margin: 2px 0
+    }
+
+    #cv aside ul {
+      padding-left: 14px;
+      margin: 0
+    }
+
+    #cv .main {
+      padding: 16mm 12mm 12mm 10mm
+    }
+
+    #cv h1 {
+      font: 700 24pt/1.1 Georgia, serif;
+      margin: 0;
+      color: #12423a
+    }
+
+    #cv .role {
+      font: 600 11.5pt system-ui;
+      color: #0f6b5c;
+      margin: 4px 0 14px
+    }
+
+    #cv h4 {
+      font: 700 10pt system-ui;
+      color: #12423a;
+      border-bottom: 1.5px solid #12423a;
+      margin: 14px 0 6px;
+      padding-bottom: 2px
+    }
+
+    #cv .job b {
+      display: block
+    }
+
+    #cv .job i {
+      font-size: 9.5pt;
+      color: #555
+    }
+
+    #cv .job ul {
+      margin: 3px 0 8px;
+      padding-left: 16px
+    }
+
+    #cv.t2,
+    #cv.t3 {
+      display: block;
+      padding: 18mm 18mm 14mm
+    }
+
+    #cv.t2 {
+      font: 11pt/1.5 Georgia, serif;
+      color: #111
+    }
+
+    #cv.t2 h1 {
+      font: 400 27pt/1.1 Georgia, serif;
+      text-align: center;
+      color: #111;
+      letter-spacing: .02em
+    }
+
+    #cv.t2 .role {
+      text-align: center;
+      color: #111;
+      font: italic 12pt Georgia, serif;
+      margin: 4px 0 6px
+    }
+
+    #cv.t2 .ct {
+      text-align: center;
+      font: 9.5pt system-ui;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #111;
+      margin-bottom: 4px
+    }
+
+    #cv.t2 h4 {
+      font: 400 11.5pt Georgia, serif;
+      font-variant: small-caps;
+      letter-spacing: .08em;
+      color: #111;
+      border-bottom: 1px solid #111;
+      margin: 16px 0 6px
+    }
+
+    #cv.t2 .job ul {
+      margin: 3px 0 10px
+    }
+
+    #cv.t3 {
+      padding: 0;
+      font: 11.5pt/1.6 system-ui, sans-serif;
+      color: #1c2733
+    }
+
+    #cv.t3 header {
+      background: #17324d;
+      color: #fff;
+      padding: 20mm 18mm 12mm;
+      border-bottom: 5px solid var(--a)
+    }
+
+    #cv.t3 h1 {
+      font: 800 31pt/1.05 system-ui, sans-serif;
+      color: #fff
+    }
+
+    #cv.t3 .role {
+      font: 600 14pt system-ui;
+      color: var(--a);
+      margin: 8px 0 12px
+    }
+
+    #cv.t3 .ct {
+      font: 10pt system-ui;
+      color: #d5e0ea;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px 16px
+    }
+
+    #cv.t3 .body {
+      padding: 10mm 18mm 14mm
+    }
+
+    #cv.t3 h4 {
+      font: 700 12pt system-ui;
+      color: #17324d;
+      border: 0;
+      border-left: 4px solid var(--a);
+      padding: 1px 0 1px 8px;
+      margin: 18px 0 8px
+    }
+
+    #cv.t3 .job {
+      margin-bottom: 12px
+    }
+
+    #cv.t3 .pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px
+    }
+
+    #cv.t3 .pills span {
+      background: #e8eef4;
+      border-radius: 14px;
+      padding: 3px 11px;
+      font: 10pt system-ui
+    }
+
+    #cv.t1 aside {
+      background: var(--c)
+    }
+
+    #cv.t1 .mono {
+      width: 25mm;
+      height: 25mm;
+      border: 2.5px solid var(--a);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font: 700 23pt Georgia, serif;
+      margin: 0 auto 7mm;
+      color: #fff;
+      overflow: hidden;
+      cursor: pointer
+    }
+
+    #cv.t1 .mono img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block
+    }
+
+    #cv.t1 aside h3 {
+      font: 800 8.5pt system-ui;
+      letter-spacing: .12em;
+      color: var(--a);
+      border: 0;
+      margin: 16px 0 5px
+    }
+
+    #cv.t1 h1 {
+      font: 800 28pt/1 system-ui, sans-serif;
+      letter-spacing: -.015em;
+      color: var(--c)
+    }
+
+    #cv.t1 .role {
+      font: 600 12pt system-ui;
+      color: #333;
+      border-left: 4px solid var(--a);
+      padding-left: 9px;
+      margin: 10px 0 18px
+    }
+
+    #cv.t1 h4 {
+      font: 800 10.5pt system-ui;
+      color: var(--c);
+      border: 0;
+      margin: 18px 0 6px
+    }
+
+    #cv.t1 h4::after {
+      content: '';
+      display: block;
+      width: 14mm;
+      height: 3px;
+      background: var(--a);
+      margin-top: 3px
+    }
+
+    #cv.t1 .job {
+      border-left: 2px solid var(--c);
+      padding-left: 10px;
+      margin-bottom: 10px
+    }
+
+    #cv.t1 .job ul {
+      margin: 3px 0 0
+    }
+
+    #cv.t3 header {
+      background: var(--c)
+    }
+
+    #cv.t3 h4 {
+      color: var(--c)
+    }
+
+    @media print {
+      @page {
+        size: A4;
+        margin: 0
+      }
+
+      body>*:not(#print) {
+        display: none !important
+      }
+
+      #print {
+        display: block !important
+      }
+
+      #wrap {
+        border: 0;
+        border-radius: 0;
+        overflow: visible;
+        height: auto !important
+      }
+
+      #cv {
+        transform: none !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+    <h1>Gerador de currículo</h1>
+
+    <section>
+      <h2>Dados do cliente</h2>
+      <label>Nome completo</label><input id="nome" autocomplete="off">
+      <label>Cargo pretendido</label><input id="cargo" list="cargos"
+        placeholder="Ex: balconista, garçom, recepcionista">
+      <datalist id="cargos"></datalist>
+      <div class="row">
+        <div><label>WhatsApp</label><input id="tel" inputmode="tel" placeholder="(73) 9...."></div>
+        <div><label>Cidade</label><input id="cidade" value="Santa Cruz Cabrália - BA"></div>
+      </div>
+      <label>E-mail (opcional)</label><input id="email" inputmode="email">
+      <div class="row">
+        <div><label>Idade (opcional)</label><input id="idade" inputmode="numeric"></div>
+        <div><label>Escolaridade</label>
+          <select id="esc">
+            <option>Ensino Fundamental Incompleto</option>
+            <option>Ensino Fundamental Completo</option>
+            <option>Ensino Médio Incompleto</option>
+            <option selected>Ensino Médio Completo</option>
+            <option>Ensino Superior Incompleto</option>
+            <option>Ensino Superior Completo</option>
+          </select>
+        </div>
+      </div>
+      <label>Cursos (opcional, separe por vírgula)</label><input id="cursos">
+      <label>Foto (opcional) <small>· aparece no modelo Moderno. Também dá pra tocar no círculo da prévia.</small></label>
+      <input type="file" id="foto" accept="image/*" hidden>
+      <button type="button" class="sec" id="fbtn">Escolher foto</button>
+      <button type="button" class="sec" id="frem" style="display:none">Remover foto</button>
+    </section>
+
+    <section>
+      <h2>Experiências <small>(deixe vazio se for primeiro emprego)</small></h2>
+      <div id="exps"></div>
+      <button type="button" class="sec" id="mais">(+) Adicionar empresa</button>
+    </section>
+
+    <section>
+      <h2>Habilidades</h2>
+      <div class="chips" id="hab"></div>
+    </section>
+
+    <section>
+      <h2>Sobre mim <small>(sai sozinho, edite se quiser)</small></h2>
+      <textarea id="sobre"></textarea>
+      <button type="button" class="sec" id="outro">↻ Gerar outro texto</button>
+    </section>
+
+    <section>
+      <h2>Modelo e cor</h2>
+      <select id="modelo">
+        <option value="t1">Moderno (barra lateral)</option>
+        <option value="t2">Clássico (uma coluna)</option>
+        <option value="t3">Direto (cabeçalho grande)</option>
+      </select>
+      <div class="cores" id="cores"></div>
+      <small>O Clássico é sempre preto e branco. A cor vale para o Moderno e o Direto.</small>
+    </section>
+
+    <button id="pdf">Gerar PDF</button>
+    <button class="sec" id="zap">Enviar texto pelo WhatsApp</button>
+    <button class="sec" id="limpar">Limpar tudo</button>
+
+    <h2 style="margin-top:18px">Prévia</h2>
+  </main>
+  <div id="print" style="max-width:640px;margin:0 auto;padding:0 16px 24px">
+    <div id="wrap">
+      <div id="cv"></div>
+    </div>
+  </div>
+
+  <script>
+const $=id=>document.getElementById(id);
+const norm=s=>(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+const esc=s=>(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const SEL='input:not([type=checkbox]):not([type=file]),select,textarea';
+
+const D=[
+{n:'Auxiliar de Vendas / Balconista',k:['balcon','vendedor','vendas','atendente','loja','comercio'],
+ s:'Tenho facilidade de comunicação, gosto de atender bem o cliente e de trabalhar com metas.',
+ a:['Atendimento ao cliente no balcão e no salão de vendas','Organização e reposição de mercadorias','Apoio no caixa e conferência de produtos']},
+{n:'Operador(a) de Caixa',k:['caixa'],
+ s:'Tenho atenção aos detalhes, honestidade no trato com valores e boa relação com o público.',
+ a:['Registro de vendas e recebimento em dinheiro, cartão e Pix','Conferência e fechamento de caixa','Atendimento cordial ao cliente']},
+{n:'Garçom / Garçonete',k:['garcom','garconete','salao','bar'],
+ s:'Tenho agilidade, boa memória e gosto de lidar com o público, mantendo educação e simpatia.',
+ a:['Atendimento de mesas e anotação de pedidos','Servir pratos e bebidas com agilidade','Organização do salão e apoio à cozinha']},
+{n:'Auxiliar de Cozinha / Cozinheiro(a)',k:['cozinh','chef','copeir'],
+ s:'Tenho compromisso com higiene, organização e trabalho em ritmo acelerado.',
+ a:['Preparo e porcionamento de alimentos','Higienização de utensílios e bancadas','Apoio ao cozinheiro e controle de estoque']},
+{n:'Recepcionista',k:['recepc','pousada','hotel','hospedagem'],
+ s:'Tenho boa comunicação, apresentação e paciência para receber e orientar pessoas.',
+ a:['Recepção e orientação de clientes e visitantes','Atendimento telefônico e por WhatsApp','Controle de agenda, entradas e saídas']},
+{n:'Camareira / Auxiliar de Hotelaria',k:['camarei','hotelaria','arrumador'],
+ s:'Sou caprichosa, discreta e organizada, com atenção à limpeza e aos detalhes.',
+ a:['Arrumação e limpeza de quartos e áreas comuns','Troca de enxoval e reposição de itens','Controle de materiais de limpeza']},
+{n:'Auxiliar de Serviços Gerais',k:['servicos gerais','limpeza','faxin','zelador','diarista'],
+ s:'Sou dedicado(a), cuidadoso(a) com o ambiente de trabalho e cumpro bem as tarefas combinadas.',
+ a:['Limpeza e conservação de ambientes','Organização de materiais e áreas de trabalho','Apoio em tarefas gerais conforme a necessidade']},
+{n:'Auxiliar Administrativo',k:['administr','escritorio','secretar','assistente'],
+ s:'Tenho organização, noções de informática e responsabilidade com prazos e documentos.',
+ a:['Organização e arquivamento de documentos','Digitação e uso de planilhas e textos','Atendimento a clientes e apoio à equipe']},
+{n:'Ajudante de Obras / Pedreiro',k:['pedreiro','obra','servente','pintor','ajudante','construc'],
+ s:'Sou forte, pontual e aprendo rápido, com compromisso com a segurança e a qualidade do serviço.',
+ a:['Apoio em construção, reforma e acabamento','Preparo de massa e transporte de materiais','Organização do canteiro e cuidado com ferramentas']},
+{n:'Motorista / Entregador',k:['motorista','entregador','motoboy','moto','entrega'],
+ s:'Sou responsável, conheço bem a região e tenho compromisso com horários e com a conservação do veículo.',
+ a:['Entrega de mercadorias e documentos no prazo','Conferência de pedidos e notas','Cuidado e manutenção básica do veículo']},
+{n:'Auxiliar de Estoque / Repositor',k:['estoque','repositor','deposito','almoxarif','mercado','supermercado'],
+ s:'Sou organizado(a), ágil e atento(a) a prazos de validade e conferência de produtos.',
+ a:['Recebimento e conferência de mercadorias','Reposição e organização de prateleiras','Controle e arrumação do estoque']}
+];
+const GEN={n:'Profissional',s:'Sou uma pessoa dedicada, pontual e comprometida com o que faço.',
+ a:['Execução das tarefas do setor com responsabilidade','Atendimento ao público e apoio à equipe','Organização do ambiente e dos materiais de trabalho']};
+const find=t=>{const q=norm(t);if(!q)return null;return D.find(d=>d.k.some(k=>q.includes(k)))||null};
+
+/* variações do "Sobre mim": a frase da profissão (d.s) ganha irmãs aqui */
+const V={
+'Auxiliar de Vendas / Balconista':[
+ 'Gosto de conversar com o cliente, entender o que ele procura e ajudar a fechar uma boa compra.',
+ 'Sou comunicativo(a), simpático(a) e tenho jeito para vendas e para manter o cliente satisfeito.',
+ 'Me dedico a atender com atenção, explicar bem os produtos e deixar o cliente com vontade de voltar.'],
+'Operador(a) de Caixa':[
+ 'Sou cuidadoso(a) com números e valores, e trato cada cliente com educação e agilidade.',
+ 'Tenho atenção na hora de contar, conferir e fechar o caixa, sempre com honestidade.',
+ 'Gosto de trabalho que pede concentração e responsabilidade, e sei atender bem mesmo com a fila andando.'],
+'Garçom / Garçonete':[
+ 'Sou ágil, simpático(a) e consigo manter a calma mesmo nos horários de maior movimento.',
+ 'Gosto de receber bem, anotar certo e fazer o cliente sair satisfeito com o atendimento.',
+ 'Tenho facilidade para trabalhar em equipe no salão e boa memória para pedidos e mesas.'],
+'Auxiliar de Cozinha / Cozinheiro(a)':[
+ 'Gosto de cozinha, sigo as regras de higiene e consigo manter o ritmo mesmo com a casa cheia.',
+ 'Sou organizado(a), cuidadoso(a) com os alimentos e aprendo rápido com a equipe e com o chefe.',
+ 'Tenho disposição para o trabalho em equipe na cozinha e atenção à limpeza e ao desperdício.'],
+'Recepcionista':[
+ 'Gosto de receber bem as pessoas, passar informação com clareza e resolver o que aparece com calma.',
+ 'Sou educado(a), atencioso(a) e tenho facilidade para lidar com clientes e com o telefone.',
+ 'Tenho boa postura, paciência e capricho na organização do atendimento e da agenda.'],
+'Camareira / Auxiliar de Hotelaria':[
+ 'Tenho capricho com a limpeza, cuido bem dos ambientes e trabalho com discrição e responsabilidade.',
+ 'Gosto de deixar tudo em ordem e confortável para quem chega, com atenção a cada detalhe.',
+ 'Sou organizada, pontual e cuidadosa com os pertences e com o padrão de arrumação do local.'],
+'Auxiliar de Serviços Gerais':[
+ 'Tenho disposição para o trabalho, capricho na limpeza e jeito para manter tudo organizado.',
+ 'Sou responsável, tenho boa vontade para aprender e faço as tarefas com atenção e sem atraso.',
+ 'Cuido bem do local de trabalho e dos materiais, e posso ajudar em mais de uma função.'],
+'Auxiliar Administrativo':[
+ 'Sou organizado(a), uso bem computador e celular e cuido dos documentos com atenção e sigilo.',
+ 'Tenho facilidade com digitação, planilhas e atendimento, e gosto de manter tudo em ordem e no prazo.',
+ 'Aprendo rápido, sei trabalhar em equipe e tenho cuidado com arquivos, dados e informações.'],
+'Ajudante de Obras / Pedreiro':[
+ 'Tenho disposição para o serviço pesado, sigo orientação e me preocupo com a segurança no trabalho.',
+ 'Sou esforçado(a), pontual e capricho no acabamento, sempre aprendendo com quem tem mais experiência.',
+ 'Gosto de ver o serviço bem feito e de cumprir o combinado no prazo, cuidando das ferramentas e do local.'],
+'Motorista / Entregador':[
+ 'Dirijo com atenção e prudência, respeito o trânsito e cuido bem do veículo e da mercadoria.',
+ 'Conheço bem as ruas da região, sou pontual e tenho cuidado para que tudo chegue certo ao destino.',
+ 'Tenho boa orientação, responsabilidade nas entregas e educação no contato com o cliente.'],
+'Auxiliar de Estoque / Repositor':[
+ 'Tenho atenção na conferência de mercadorias e gosto de deixar prateleiras e estoque bem organizados.',
+ 'Sou ágil, tenho disposição para o trabalho em pé e cuido do que chega e do que sai com responsabilidade.',
+ 'Aprendo rápido, mantenho o setor em ordem e fico de olho em validade, quantidade e avarias.'],
+'Profissional':[
+ 'Sou responsável, tenho boa vontade para aprender e gosto de trabalhar em equipe.',
+ 'Tenho educação no trato com as pessoas, disposição para o trabalho e compromisso com os horários.',
+ 'Aprendo rápido, cumpro o que combino e me dedico para fazer um bom trabalho.',
+ 'Sou uma pessoa de confiança, esforçada e aberta a aprender o que a função pedir.']
+};
+/* c = cargo digitado em minúsculas, ou '' se estiver vazio */
+const ABRE_EXP=[
+ c=>`Profissional com experiência na área, ${c?'em busca de oportunidade como '+c:'em busca de uma oportunidade de trabalho'}.`,
+ c=>c?`Tenho experiência na área e busco uma vaga como ${c}.`:'Tenho experiência profissional e busco uma nova oportunidade de trabalho.',
+ c=>c?`Com experiência anterior na função, quero atuar como ${c}.`:'Com experiência anterior, busco uma nova oportunidade para crescer na profissão.',
+ c=>c?`Já trabalhei na área e agora procuro uma vaga como ${c}.`:'Já tenho experiência de trabalho e agora procuro uma nova vaga.',
+ c=>c?`Profissional dedicado(a), com bagagem na área, disponível para atuar como ${c}.`:'Profissional dedicado(a), com bagagem na área, disponível para uma nova oportunidade.'
+];
+const ABRE_NOVO=[
+ c=>`Pessoa responsável, pontual e com vontade de aprender, ${c?'em busca de oportunidade como '+c:'em busca de uma oportunidade de trabalho'}.`,
+ c=>c?`Tenho muita vontade de aprender e de mostrar serviço, e busco uma oportunidade como ${c}.`:'Tenho muita vontade de aprender e de mostrar serviço, e busco uma oportunidade de trabalho.',
+ c=>c?`Pessoa esforçada e comprometida, disponível para atuar como ${c} e aprender rápido.`:'Pessoa esforçada e comprometida, disponível para uma oportunidade de trabalho e para aprender rápido.',
+ c=>c?`Estou em busca de uma chance como ${c}, com disposição, educação e vontade de crescer.`:'Estou em busca de uma chance de trabalho, com disposição, educação e vontade de crescer.',
+ c=>c?`Quero conquistar uma vaga como ${c}, mostrando dedicação e compromisso desde o primeiro dia.`:'Quero conquistar uma vaga, mostrando dedicação e compromisso desde o primeiro dia.'
+];
+const FECHA=[
+ 'Busco crescer e contribuir com os resultados da empresa.',
+ 'Quero fazer parte de uma equipe e contribuir para o bom funcionamento da empresa.',
+ 'Estou disponível para começar logo e dar o meu melhor no dia a dia.',
+ 'Tenho interesse em crescer junto com a empresa e fazer um trabalho bem feito.',
+ 'Meu objetivo é construir uma relação de confiança e crescer profissionalmente.',
+ 'Fico à disposição para uma conversa ou entrevista.'
+];
+/* sorteio com semente: o texto só muda quando a semente muda, não a cada tecla */
+const rng=a=>()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296};
+const novaSemente=()=>(Math.random()*4294967296)>>>0;
+let SEED=novaSemente();
+
+const HAB=['Pontualidade','Comunicação','Trabalho em equipe','Proatividade','Organização','Atendimento ao cliente','Agilidade','Responsabilidade','Informática básica','Facilidade para aprender','Honestidade','Pacote Office'];
+const DEF=['Pontualidade','Comunicação','Trabalho em equipe','Responsabilidade'];
+$('cargos').innerHTML=D.map(d=>`<option value="${d.n}">`).join('');
+$('hab').innerHTML=HAB.map((h,i)=>`<label><input type="checkbox" value="${h}"${DEF.includes(h)?' checked':''}>${h}</label>`).join('');
+function addExp(){
+ const n=document.querySelectorAll('.exp').length;if(n>=6)return;
+ const d=document.createElement('div');d.className='exp';
+ d.innerHTML=`<label>Empresa ${n+1}</label><input class="ee"><div class="row"><div><label>Função</label><input class="ef"></div><div><label>Período</label><input class="ep" placeholder="2022 - 2024"></div></div>`;
+ $('exps').appendChild(d);if(n+1>=6)$('mais').style.display='none';
+}
+addExp();addExp();
+$('mais').onclick=()=>{addExp();salvar()};
+
+/* paletas: [cor principal, cor de destaque] */
+const PAL=[
+ ['#12423a','#e0a526'],['#17324d','#e0a526'],['#4a2370','#f2c14e'],['#7a1d33','#e8a87c'],
+ ['#7a3b12','#f0c987'],['#2b2b2b','#e0a526'],['#0e4f5c','#7fd6c2'],['#1e3a8a','#fbbf24'],
+ ['#166534','#facc15'],['#9d174d','#fda4af'],['#9a3412','#fdba74'],['#312e81','#a5b4fc'],
+ ['#3f4a1f','#d9e08a'],['#115e59','#5eead4']
+];
+let COR=PAL[0][0];try{COR=localStorage.getItem('cvc')||COR}catch(e){}
+if(!PAL.some(p=>p[0]===COR))COR=PAL[0][0];
+const accOf=()=>(PAL.find(p=>p[0]===COR)||PAL[0])[1];
+$('cores').innerHTML=PAL.map(p=>`<button type="button" class="sw" data-c="${p[0]}" style="background:linear-gradient(135deg,${p[0]} 55%,${p[1]} 55%)" aria-label="cor ${p[0]}"></button>`).join('');
+const marca=()=>document.querySelectorAll('.sw').forEach(b=>b.classList.toggle('on',b.dataset.c===COR));
+$('cores').onclick=e=>{const b=e.target.closest('.sw');if(!b)return;COR=b.dataset.c;try{localStorage.setItem('cvc',COR)}catch(_){}marca();render()};
+marca();
+
+/* foto do círculo */
+let FOTO='';try{FOTO=localStorage.getItem('cvf')||''}catch(e){}
+function fotoUI(){$('fbtn').textContent=FOTO?'Trocar foto':'Escolher foto';$('frem').style.display=FOTO?'':'none'}
+$('fbtn').onclick=()=>$('foto').click();
+$('frem').onclick=()=>{FOTO='';try{localStorage.removeItem('cvf')}catch(e){}$('foto').value='';fotoUI();render()};
+$('cv').addEventListener('click',e=>{if(e.target.closest('.mono'))$('foto').click()});
+$('foto').onchange=e=>{
+ const f=e.target.files[0];if(!f)return;
+ const u=URL.createObjectURL(f),img=new Image();
+ img.onload=()=>{
+  const w=img.naturalWidth,h=img.naturalHeight,s=Math.min(w,h),T=360;
+  const c=document.createElement('canvas');c.width=c.height=T;
+  /* foto em pé: recorta mais perto do topo, onde costuma estar o rosto */
+  const sx=(w-s)/2,sy=(h-s)*(h>w?.2:.5);
+  c.getContext('2d').drawImage(img,sx,sy,s,s,0,0,T,T);
+  FOTO=c.toDataURL('image/jpeg',.85);URL.revokeObjectURL(u);
+  try{localStorage.setItem('cvf',FOTO)}catch(_){}
+  fotoUI();render();
+ };
+ img.onerror=()=>{URL.revokeObjectURL(u);alert('Não consegui abrir essa foto. Tenta outra.')};
+ img.src=u;e.target.value='';
+};
+fotoUI();
+
+let sobreEditado=false;
+function autoSobre(){
+ if(sobreEditado)return;
+ const c=$('cargo').value.trim(),d=find(c)||GEN;
+ const temExp=[...document.querySelectorAll('.ee')].some(e=>e.value.trim());
+ const r=rng(SEED),pick=a=>a[Math.floor(r()*a.length)];
+ const abre=pick(temExp?ABRE_EXP:ABRE_NOVO)(c.toLowerCase());
+ const meio=pick([d.s,...(V[d.n]||[])]);
+ const fecha=pick(FECHA);
+ $('sobre').value=`${abre} ${meio} ${fecha}`;
+}
+$('outro').onclick=()=>{
+ const antes=$('sobre').value;sobreEditado=false;
+ for(let i=0;i<10;i++){SEED=novaSemente();autoSobre();if($('sobre').value!==antes)break}
+ render();salvar();
+};
+
+function dados(){
+ const exps=[...document.querySelectorAll('.exp')].map(e=>({
+  emp:e.querySelector('.ee').value.trim(),fn:e.querySelector('.ef').value.trim(),per:e.querySelector('.ep').value.trim()
+ })).filter(x=>x.emp);
+ return{
+  nome:$('nome').value.trim(),cargo:$('cargo').value.trim(),tel:$('tel').value.trim(),cidade:$('cidade').value.trim(),
+  email:$('email').value.trim(),idade:$('idade').value.trim(),esc:$('esc').value,
+  cursos:$('cursos').value.split(',').map(s=>s.trim()).filter(Boolean),
+  hab:[...document.querySelectorAll('#hab input:checked')].map(i=>i.value),
+  sobre:$('sobre').value.trim(),exps
+ };
+}
+
+function render(){
+ const x=dados(),dc=find(x.cargo)||GEN,m=$('modelo').value;
+ const jobs=x.exps.map(e=>{
+  const d=find(e.fn)||dc;
+  return `<div class="job"><b>${esc(e.emp)}</b><i>${esc(e.fn||x.cargo)}${e.per?' · '+esc(e.per):''}</i><ul>${d.a.map(a=>`<li>${esc(a)}</li>`).join('')}</ul></div>`;
+ }).join('');
+ const ct=[x.tel,x.email,x.cidade,x.idade&&x.idade+' anos'].filter(Boolean);
+ const nome=esc(x.nome)||'Nome do candidato',cargo=esc(x.cargo)||'Cargo pretendido';
+ const obj=`Atuar como ${esc(x.cargo||'profissional')}, aplicando dedicação e aprendizado rápido desde o primeiro dia.`;
+ const form=`<div>${esc(x.esc)}</div>${x.cursos.length?`<ul>${x.cursos.map(c=>`<li>${esc(c)}</li>`).join('')}</ul>`:''}`;
+ let h;
+ if(m==='t2'){
+  h=`<h1>${nome}</h1><div class="role">${cargo}</div><div class="ct">${ct.map(esc).join(' | ')}</div>
+  <h4>Sobre mim</h4><div>${esc(x.sobre)}</div>
+  <h4>${x.exps.length?'Experiência profissional':'Objetivo'}</h4>${x.exps.length?jobs:`<div>${obj}</div>`}
+  <h4>Formação</h4>${form}
+  ${x.hab.length?`<h4>Habilidades</h4><div>${x.hab.map(esc).join(', ')}.</div>`:''}`;
+ }else if(m==='t3'){
+  h=`<header><h1>${nome}</h1><div class="role">${cargo}</div><div class="ct">${ct.map(c=>`<span>${esc(c)}</span>`).join('')}</div></header>
+  <div class="body"><h4>Sobre mim</h4><div>${esc(x.sobre)}</div>
+  <h4>${x.exps.length?'Experiência profissional':'Objetivo'}</h4>${x.exps.length?jobs:`<div>${obj}</div>`}
+  <h4>Formação</h4>${form}
+  ${x.hab.length?`<h4>Habilidades</h4><div class="pills">${x.hab.map(h=>`<span>${esc(h)}</span>`).join('')}</div>`:''}</div>`;
+ }else{
+  const ws=x.nome.split(/\s+/).filter(Boolean),ini=ws.length?(ws[0][0]+(ws.length>1?ws[ws.length-1][0]:'')).toUpperCase():'CV';
+  const mono=FOTO?`<div class="mono"><img src="${FOTO}" alt=""></div>`:`<div class="mono">${esc(ini)}</div>`;
+  h=`<aside>${mono}
+  <h3>CONTATO</h3>${ct.map(c=>`<p>${esc(c)}</p>`).join('')}
+  <h3>FORMAÇÃO</h3>${form}
+  ${x.hab.length?`<h3>HABILIDADES</h3><ul>${x.hab.map(h=>`<li>${esc(h)}</li>`).join('')}</ul>`:''}
+  </aside><div class="main"><h1>${nome}</h1><div class="role">${cargo}</div>
+  <h4>SOBRE MIM</h4><div>${esc(x.sobre)}</div>
+  <h4>${x.exps.length?'EXPERIÊNCIA PROFISSIONAL':'OBJETIVO'}</h4>${x.exps.length?jobs:`<div>${obj}</div>`}</div>`;
+ }
+ $('cv').style.setProperty('--c',COR);$('cv').style.setProperty('--a',accOf());
+ $('cv').className=m;$('cv').innerHTML=h;
+ fit();
+}
+
+function fit(){
+ const w=$('wrap'),cv=$('cv'),s=Math.min(1,(w.clientWidth||640)/cv.offsetWidth);
+ cv.style.transform=`scale(${s})`;
+ w.style.height=(cv.offsetHeight*s)+'px';
+}
+
+function salvar(){try{localStorage.setItem('cvn',document.querySelectorAll('.exp').length);localStorage.setItem('cv',JSON.stringify([...document.querySelectorAll(SEL)].map(e=>e.value)))}catch(e){}}
+
+document.addEventListener('input',e=>{
+ if(e.target.id==='foto')return;
+ if(e.target.id==='sobre')sobreEditado=true;
+ else autoSobre();
+ render();salvar();
+});
+window.addEventListener('resize',fit);
+window.addEventListener('beforeprint',()=>{$('cv').style.transform='none'});
+window.addEventListener('afterprint',fit);
+
+$('pdf').onclick=()=>{
+ const n=$('nome').value.trim();
+ if(n)document.title='Curriculo - '+n;
+ render();$('cv').style.transform='none';window.print();
+};
+$('zap').onclick=()=>{
+ const x=dados();
+ const t=[x.nome,x.cargo,'',x.sobre,'','Contato: '+x.tel].join('\n');
+ window.open('https://wa.me/?text='+encodeURIComponent(t),'_blank');
+};
+$('limpar').onclick=()=>{
+ if(!confirm('Apagar tudo?'))return;
+ document.querySelectorAll('input:not([type=checkbox]):not([type=file]),textarea').forEach(e=>e.value='');
+ $('cidade').value='Santa Cruz Cabrália - BA';sobreEditado=false;SEED=novaSemente();
+ document.querySelectorAll('#hab input').forEach(i=>i.checked=DEF.includes(i.value));
+ document.querySelectorAll('.exp').forEach((e,i)=>{if(i>=2)e.remove()});$('mais').style.display='';
+ FOTO='';$('foto').value='';fotoUI();
+ try{localStorage.removeItem('cv');localStorage.removeItem('cvn');localStorage.removeItem('cvf')}catch(e){}
+ autoSobre();render();
+};
+
+try{const n=+localStorage.getItem('cvn')||2;while(document.querySelectorAll('.exp').length<n)addExp()}catch(e){}
+try{const v=JSON.parse(localStorage.getItem('cv')||'null');if(v){[...document.querySelectorAll(SEL)].forEach((e,i)=>{if(v[i]!=null)e.value=v[i]});sobreEditado=!!$('sobre').value}}catch(e){}
+if(!$('sobre').value)autoSobre();
+render();
+</script>
+</body>
+
+</html>
